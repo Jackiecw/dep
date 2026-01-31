@@ -24,9 +24,9 @@
       <a-layout-header style="background: #fff; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; -webkit-app-region: drag;">
         <span>欢迎, 管理员</span>
         <div style="-webkit-app-region: no-drag; display: flex; align-items: center; gap: 8px;">
-            <a-button type="text" @click="getCurrentWindow().minimize()">_</a-button>
-            <a-button type="text" @click="getCurrentWindow().toggleMaximize()">□</a-button>
-            <a-button type="text" danger @click="getCurrentWindow().close()">✕</a-button>
+            <a-button type="text" @click="handleMinimize">_</a-button>
+            <a-button type="text" @click="handleMaximize">□</a-button>
+            <a-button type="text" danger @click="handleClose">✕</a-button>
         </div>
       </a-layout-header>
       <a-layout-content style="margin: 16px">
@@ -51,6 +51,33 @@ const collapsed = ref(false);
 const selectedKeys = ref<string[]>(['dashboard']);
 const authStore = useAuthStore();
 const router = useRouter();
+
+const appWindow = getCurrentWindow();
+
+async function handleMinimize() {
+    try {
+        await appWindow.minimize();
+    } catch (error) {
+        console.error('Failed to minimize:', error);
+    }
+}
+
+async function handleMaximize() {
+    try {
+        await appWindow.toggleMaximize();
+    } catch (error) {
+        console.error('Failed to maximize:', error);
+    }
+}
+
+async function handleClose() {
+    try {
+        // This triggers the 'close-requested' listener in App.vue
+        await appWindow.close();
+    } catch (error) {
+        console.error('Failed to close:', error);
+    }
+}
 
 function handleLogout() {
     authStore.logout();

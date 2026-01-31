@@ -26,7 +26,6 @@ import { open } from '@tauri-apps/plugin-shell';
 import { setWindowMode } from './utils/windowManager'; // Import helper
 import Login from './views/Login.vue';
 import axios from 'axios';
-import { listen } from '@tauri-apps/api/event';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { exit } from '@tauri-apps/plugin-process';
 
@@ -34,14 +33,29 @@ const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
 
 // Handle Close Request
-listen('close-requested', async () => {
-    if (!settingsStore.closeBehavior || settingsStore.closeBehavior === 'minimize') {
-        await getCurrentWindow().hide();
-    } else {
-        await exit(0);
+// We use onMounted to register the listener once the component is ready,
+// checking if it's the main window or not.
+onMounted(async () => {
+    await settingsStore.init();
+    await checkVersion();
+    
+    // Register close request handler ONLY for Main Window
+    // This strictly separates logic: Main window gets custom close behavior (tray/minimize).
+    // Secondary windows (like report-window) get standard native behavior (destroy on close).
+    const win = getCurrentWindow();
+    if (win.label === 'main') {
+        await win.onCloseRequested(async (event) => {
+            // Prevent the default close (destroy) operation
+            event.preventDefault();
+            
+            if (!settingsStore.closeBehavior || settingsStore.closeBehavior === 'minimize') {
+                await win.hide();
+            } else {
+                await exit(0);
+            }
+        });
     }
 });
-
 
 
 const updateVisible = ref(false);
@@ -57,10 +71,6 @@ watch(() => authStore.user, async (user) => {
     }
 }, { immediate: true });
 
-onMounted(async () => {
-    await settingsStore.init();
-    await checkVersion();
-});
 
 async function checkVersion() {
     try {

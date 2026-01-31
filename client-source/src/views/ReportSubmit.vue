@@ -69,7 +69,7 @@
 
             <div class="form-actions">
                 <a-button type="primary" size="large" html-type="submit" :loading="submitting">提交周报</a-button>
-                <a-button size="large" @click="getCurrentWindow().close()" style="margin-left: 10px">取消</a-button>
+                <a-button size="large" @click="handleCancel" style="margin-left: 10px">取消</a-button>
             </div>
             </a-form>
         </a-card>
@@ -145,13 +145,23 @@ function insertText(prefix: string, suffix: string = '') {
     }
 }
 
+const appWindow = getCurrentWindow();
+
+async function handleCancel() {
+    try {
+        await appWindow.close();
+    } catch (error) {
+        console.error('Failed to close report window:', error);
+    }
+}
+
 async function onFinish() {
     submitting.value = true;
     try {
         await api.post('/reports', { ...formState });
         message.success('周报提交成功');
-        setTimeout(() => {
-            getCurrentWindow().close();
+        setTimeout(async () => {
+            await handleCancel();
         }, 1500);
     } catch (e: any) {
         message.error("提交失败: " + (e.response?.data?.detail || e.message));
