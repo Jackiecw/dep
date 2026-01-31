@@ -12,6 +12,9 @@
         <a-menu-item key="tasks" @click="$router.push('/admin/tasks-manage')">
           <span>Task Distribution</span>
         </a-menu-item>
+        <a-menu-item key="reports" @click="$router.push('/admin/reports')">
+          <span>Weekly Reports</span>
+        </a-menu-item>
         <a-menu-item key="logout" @click="handleLogout">
             <span style="color: #ff4d4f">Logout</span>
         </a-menu-item>

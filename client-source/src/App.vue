@@ -18,10 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useAuthStore } from './stores/auth';
 import { getVersion } from '@tauri-apps/api/app';
 import { open } from '@tauri-apps/plugin-shell';
+import { setWindowMode } from './utils/windowManager'; // Import helper
 import Login from './views/Login.vue';
 import axios from 'axios';
 
@@ -30,6 +31,14 @@ const updateVisible = ref(false);
 const remoteVersion = ref('');
 const updateUrl = ref('');
 const updateNotes = ref('');
+
+// Watch user state to enforce window size
+watch(() => authStore.user, async (user) => {
+    if (user) {
+        if (user.role === 'admin') await setWindowMode('admin');
+        else await setWindowMode('widget');
+    }
+}, { immediate: true });
 
 onMounted(async () => {
     await checkVersion();

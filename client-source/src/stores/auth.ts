@@ -3,6 +3,7 @@ import api from '../api/request';
 
 
 import router from '../router';
+import { setWindowMode } from '../utils/windowManager';
 
 interface User {
     username: string;
@@ -32,8 +33,10 @@ export const useAuthStore = defineStore('auth', {
 
             // Redirect based on role
             if (this.user?.role === 'admin') {
+                await setWindowMode('admin');
                 router.push('/admin/dashboard');
             } else {
+                await setWindowMode('widget');
                 router.push('/tasks');
             }
         },
@@ -46,10 +49,12 @@ export const useAuthStore = defineStore('auth', {
                 this.logout();
             }
         },
-        logout() {
+        async logout() {
             this.token = '';
             this.user = null;
             localStorage.removeItem('token');
+            await setWindowMode('login');
+            // Assuming router handles redirect to login due to reactive auth state
         }
     }
 });

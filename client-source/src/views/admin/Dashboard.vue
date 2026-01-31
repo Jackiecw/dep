@@ -22,12 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from 'vue';
+import { ref, provide, onMounted } from 'vue';
 import { use } from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { PieChart, BarChart } from 'echarts/charts';
 import { TitleComponent, TooltipComponent, LegendComponent, GridComponent } from 'echarts/components';
 import VChart, { THEME_KEY } from 'vue-echarts';
+import api from '../../api/request';
 
 use([
   CanvasRenderer,
@@ -41,7 +42,7 @@ use([
 
 provide(THEME_KEY, 'light');
 
-const pieOption = ref({
+const pieOption = ref<any>({
   tooltip: {
     trigger: 'item'
   },
@@ -74,16 +75,12 @@ const pieOption = ref({
       labelLine: {
         show: false
       },
-      data: [
-        { value: 1048, name: 'Done' },
-        { value: 735, name: 'Pending' },
-        { value: 580, name: 'Late' }
-      ]
+      data: []
     }
   ]
 });
 
-const barOption = ref({
+const barOption = ref<any>({
   tooltip: {
     trigger: 'axis',
     axisPointer: {
@@ -99,7 +96,7 @@ const barOption = ref({
   xAxis: [
     {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: [],
       axisTick: {
         alignWithLabel: true
       }
@@ -115,10 +112,31 @@ const barOption = ref({
       name: 'Tasks Completed',
       type: 'bar',
       barWidth: '60%',
-      data: [10, 52, 200, 334, 390, 330, 220]
+      data: []
     }
   ]
 });
+
+onMounted(() => {
+    fetchStats();
+});
+
+async function fetchStats() {
+    try {
+        const res = await api.get('/stats/dashboard');
+        const data = res.data;
+        
+        // Update Pie
+        pieOption.value.series[0].data = data.pie;
+        
+        // Update Bar
+        barOption.value.xAxis[0].data = data.bar.days;
+        barOption.value.series[0].data = data.bar.counts;
+        
+    } catch (e) {
+        console.error("Failed to load dashboard stats", e);
+    }
+}
 </script>
 
 <style scoped>

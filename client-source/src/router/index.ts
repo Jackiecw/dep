@@ -18,6 +18,12 @@ const routes = [
         meta: { requiresAuth: true, role: 'employee' }
     },
     {
+        path: '/reports',
+        name: 'ReportSubmit',
+        component: () => import('../views/ReportSubmit.vue'),
+        meta: { requiresAuth: true, role: 'employee' }
+    },
+    {
         path: '/admin',
         component: AdminLayout,
         meta: { requiresAuth: true, role: 'admin' },
@@ -37,6 +43,11 @@ const routes = [
                 path: 'tasks-manage',
                 name: 'TaskManagement',
                 component: () => import('../views/admin/TaskDistribution.vue')
+            },
+            {
+                path: 'reports',
+                name: 'ReportReview',
+                component: () => import('../views/admin/ReportReview.vue')
             }
         ]
     },

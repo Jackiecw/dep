@@ -2,7 +2,10 @@
   <div class="task-list-container">
     <div class="header">
         <h3 style="margin: 0">My Tasks</h3>
-        <a-button type="text" size="small" @click="authStore.logout">Logout</a-button>
+        <div>
+            <a-button type="link" size="small" @click="$router.push('/reports')">Week Report</a-button>
+            <a-button type="text" size="small" @click="authStore.logout">Logout</a-button>
+        </div>
     </div>
     
     <div class="task-items">

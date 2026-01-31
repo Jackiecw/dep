@@ -137,4 +137,48 @@ async def create_report(report: ReportCreate, current_user: User = Depends(get_c
 async def read_reports(current_user: User = Depends(get_current_user)):
     # User sees own reports only, unless admin?
     # Plan says "Admin Power" in Phase 2.
+    if current_user.role == "admin":
+        return await Report.all().prefetch_related("user").order_by("-week_num")
     return await Report.filter(user=current_user).order_by("-week_num")
+
+# Dashboard Stats
+@router.get("/stats/dashboard")
+async def get_dashboard_stats(current_user: User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    # Pie Chart: Task Status
+    total = await Task.all().count()
+    done = await Task.filter(status="done").count()
+    pending = await Task.filter(status="pending").count()
+    # Late logic is complex without due dates, for now assume all pending are just pending
+    
+    # Bar Chart: Last 7 days completion
+    today = datetime.now().date()
+    week_stats = []
+    days = []
+    
+    for i in range(6, -1, -1):
+        day = today - timedelta(days=i)
+        day_start = datetime.combine(day, datetime.min.time())
+        day_end = datetime.combine(day, datetime.max.time())
+        
+        count = await Task.filter(
+            status="done", 
+            completed_at__gte=day_start, 
+            completed_at__lte=day_end
+        ).count()
+        
+        days.append(day.strftime("%a"))
+        week_stats.append(count)
+        
+    return {
+        "pie": [
+            {"value": done, "name": "Done"},
+            {"value": pending, "name": "Pending"}
+        ],
+        "bar": {
+            "days": days,
+            "counts": week_stats
+        }
+    }

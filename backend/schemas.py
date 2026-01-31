@@ -50,5 +50,10 @@ class ReportCreate(BaseModel):
 class ReportResponse(BaseModel):
     id: int
     week_num: int
+    content_done: str
+    content_plan: str
+    content_issues: str
     submitted_at: datetime
     is_late: bool
+    user: Optional[UserResponse] = None # Optional because it might not be fetched for simple list? Or always fetch.
+

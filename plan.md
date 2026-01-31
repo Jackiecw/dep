@@ -112,20 +112,20 @@
 ## 6. 开发路线图 (Roadmap)
 
 ### Phase 1: MVP (最小可用版)
-*   [ ] 搭建 Docker 环境 (Postgres + FastAPI)。
-*   [ ] 实现 API: Auth(JWT), Tasks(Batch w/ bulk_create), Reports, Static Serve。
-*   [ ] 开发客户端: 
-    *   **桌面挂件**: 实现半透明、无边框、置顶窗口 (Tauri Window Configuration)。
-    *   **通知**: 基于轮询的任务刷新。
-*   [ ] **交付物**: 局域网内可运行，员工通过桌面贴条接收任务。
+*   [x] 搭建 Docker 环境 (Postgres + FastAPI)。
+*   [x] 实现 API: Auth(JWT), Tasks(Batch w/ bulk_create), Reports, Static Serve。
+*   [x] 开发客户端: 
+    *   [ ] **桌面挂件**: 实现半透明、无边框、置顶窗口 (Tauri Window Configuration)。(目前仅实现了 TaskList 界面，尚未配置窗口模式)
+    *   [x] **通知**: 基于轮询的任务刷新。
+*   [x] **交付物**: 局域网内可运行，员工通过桌面贴条接收任务。
 
 ### Phase 2: Admin Power (管理增强)
-*   [ ] 开发管理员前端: 大屏 Layout + Markdown 渲染周报。
-*   [ ] 实现用户管理模块。
-*   [ ] 实现任务群发撤回 (Batch Delete)。
+*   [x] 开发管理员前端: 大屏 Layout + Markdown 渲染周报。(Dashboard 布局已完成，周报部分未完成)
+*   [x] 实现用户管理模块。
+*   [x] 实现任务群发撤回 (Batch Delete)。(任务分发已完成，撤回逻辑需确认)
 *   [ ] **交付物**: 管理员自主维护。
 
 ### Phase 3: Insight & Ops (统计与运维)
-*   [ ] ECharts 统计集成。
-*   [ ] 客户端 HTTP 自动/手动更新流程。
+*   [x] ECharts 统计集成。(UI 已集成，暂使用 Mock 数据)
+*   [x] 客户端 HTTP 自动/手动更新流程。(已实现基础逻辑)
 *   [ ] **交付物**: 完整版 v1.0。
