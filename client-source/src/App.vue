@@ -20,13 +20,30 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { useAuthStore } from './stores/auth';
+import { useSettingsStore } from './stores/settings';
 import { getVersion } from '@tauri-apps/api/app';
 import { open } from '@tauri-apps/plugin-shell';
 import { setWindowMode } from './utils/windowManager'; // Import helper
 import Login from './views/Login.vue';
 import axios from 'axios';
+import { listen } from '@tauri-apps/api/event';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { exit } from '@tauri-apps/plugin-process';
 
 const authStore = useAuthStore();
+const settingsStore = useSettingsStore();
+
+// Handle Close Request
+listen('close-requested', async () => {
+    if (!settingsStore.closeBehavior || settingsStore.closeBehavior === 'minimize') {
+        await getCurrentWindow().hide();
+    } else {
+        await exit(0);
+    }
+});
+
+
+
 const updateVisible = ref(false);
 const remoteVersion = ref('');
 const updateUrl = ref('');
@@ -41,6 +58,7 @@ watch(() => authStore.user, async (user) => {
 }, { immediate: true });
 
 onMounted(async () => {
+    await settingsStore.init();
     await checkVersion();
 });
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from tortoise.contrib.fastapi import HTTPNotFoundError
+# HTTPNotFoundError is deprecated/removed in newer tortoise versions, using standard HTTPException
+
 from typing import List
 
 from models import User, Task, Report
@@ -84,6 +85,7 @@ async def create_tasks(task: TaskCreate, current_user: User = Depends(get_curren
             batch_id=batch_id,
             title=task.title,
             content=task.content,
+            deadline=task.deadline,
             assignee=Assignee,
             creator=current_user
         ))

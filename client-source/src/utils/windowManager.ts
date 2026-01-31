@@ -16,8 +16,7 @@ export async function setWindowMode(mode: 'widget' | 'admin' | 'login') {
         await appWindow.setSize(new LogicalSize(size.width, size.height));
 
         // For widget, we might want to ensure it's always on top?
-        // But for now, just size is enough.
-        // await appWindow.setAlwaysOnTop(mode === 'widget');
+        await appWindow.setAlwaysOnTop(mode === 'widget');
 
     } catch (e) {
         console.error("Failed to resize window", e);

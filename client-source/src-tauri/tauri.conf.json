@@ -14,7 +14,11 @@
       {
         "title": "Internal Task System",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "decorations": false,
+        "transparent": true,
+        "shadow": true,
+        "skipTaskbar": true
       }
     ],
     "security": {

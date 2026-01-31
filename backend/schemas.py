@@ -25,6 +25,7 @@ class Token(BaseModel):
 class TaskCreate(BaseModel):
     title: str
     content: str
+    deadline: Optional[datetime] = None
     assignee_ids: list[int]  # List of user IDs for batch creation
 
 class TaskUpdate(BaseModel):
@@ -36,6 +37,7 @@ class TaskResponse(BaseModel):
     content: str
     status: str
     created_at: datetime
+    deadline: Optional[datetime]
     completed_at: Optional[datetime]
     assignee_id: int
     creator_id: int

@@ -1,24 +1,32 @@
 <template>
   <div class="login-container">
-    <a-card title="Internal Task System" style="width: 300px">
+    <a-button 
+        type="text" 
+        shape="circle" 
+        class="close-btn"
+        @click="getCurrentWindow().close()"
+    >
+        <template #icon>✕</template>
+    </a-button>
+    <a-card title="内部任务系统" style="width: 300px">
       <a-form :model="formState" @finish="onFinish">
         <a-form-item
           name="username"
-          :rules="[{ required: true, message: 'Please input your username!' }]"
+          :rules="[{ required: true, message: '请输入用户名!' }]"
         >
-          <a-input v-model:value="formState.username" placeholder="Username" />
+          <a-input v-model:value="formState.username" placeholder="用户名" />
         </a-form-item>
 
         <a-form-item
           name="password"
-          :rules="[{ required: true, message: 'Please input your password!' }]"
+          :rules="[{ required: true, message: '请输入密码!' }]"
         >
-          <a-input-password v-model:value="formState.password" placeholder="Password" />
+          <a-input-password v-model:value="formState.password" placeholder="密码" />
         </a-form-item>
 
         <a-form-item>
           <a-button type="primary" html-type="submit" block :loading="loading">
-            Log in
+            登录
           </a-button>
         </a-form-item>
       </a-form>
@@ -30,6 +38,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useAuthStore } from '../stores/auth';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 
 const authStore = useAuthStore();
 const loading = ref(false);
@@ -63,6 +72,7 @@ const onFinish = async (values: any) => {
   background-color: #f0f2f5;
   /* Allow dragging the window from background */
   -webkit-app-region: drag; 
+  position: relative;
 }
 :deep(.ant-card) {
     -webkit-app-region: no-drag;
@@ -71,5 +81,12 @@ const onFinish = async (values: any) => {
     color: red;
     text-align: center;
     margin-top: 10px;
+}
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    -webkit-app-region: no-drag;
+    z-index: 1000;
 }
 </style>

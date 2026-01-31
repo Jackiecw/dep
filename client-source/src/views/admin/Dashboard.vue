@@ -1,13 +1,13 @@
 <template>
   <div class="dashboard-container">
-    <h2>System Overview</h2>
+    <h2>系统总览</h2>
     
     <div class="charts-row">
-        <a-card title="Task Completion Status" style="width: 45%">
+        <a-card title="任务完成情况" style="width: 45%">
             <v-chart class="chart" :option="pieOption" autoresize />
         </a-card>
         
-        <a-card title="Weekly Task Trend" style="width: 45%">
+        <a-card title="本周任务趋势" style="width: 45%">
             <v-chart class="chart" :option="barOption" autoresize />
         </a-card>
     </div>
@@ -15,7 +15,7 @@
     <a-alert 
         style="margin-top: 20px"
         type="info" 
-        message="Data is currently mocked. Connect to /reports API for real aggregation." 
+        message="数据目前为模拟数据。Phase 2 将集成真实数据聚合。" 
         show-icon 
     />
   </div>
@@ -52,7 +52,7 @@ const pieOption = ref<any>({
   },
   series: [
     {
-      name: 'Task Status',
+      name: '任务状态',
       type: 'pie',
       radius: ['40%', '70%'],
       avoidLabelOverlap: false,
@@ -109,7 +109,7 @@ const barOption = ref<any>({
   ],
   series: [
     {
-      name: 'Tasks Completed',
+      name: '完成任务数',
       type: 'bar',
       barWidth: '60%',
       data: []

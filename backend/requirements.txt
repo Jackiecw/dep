@@ -3,5 +3,5 @@ uvicorn
 tortoise-orm
 asyncpg
 python-multipart
-pyjwt
+python-jose[cryptography]
 passlib[bcrypt]

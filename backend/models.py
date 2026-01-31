@@ -20,6 +20,7 @@ class Task(models.Model):
     creator = fields.ForeignKeyField("models.User", related_name="created_tasks")
     status = fields.CharField(max_length=20, default="pending")  # pending, done
     created_at = fields.DatetimeField(auto_now_add=True)
+    deadline = fields.DatetimeField(null=True)
     completed_at = fields.DatetimeField(null=True)
 
     class Meta:
